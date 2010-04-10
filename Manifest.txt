@@ -1,0 +1,8 @@
+History.txt
+Manifest.txt
+README.rdoc
+Rakefile
+lib/rejuicer.rb
+ext/extconf.rb
+ext/rejuicer_set.h
+ext/rejuicer_set.c
