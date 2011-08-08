@@ -367,9 +367,7 @@ static VALUE t_add(VALUE self, VALUE value)
     unsigned int num;
 
     Data_Get_Struct(self, struct _root_node, root);
-    if ((num = NUM2UINT(value)) != Qnil) {
-        add_num(root, num);
-    }
+    add_num(root, NUM2UINT(value));
 
     return self;
 }
@@ -383,9 +381,7 @@ static VALUE t_delete(VALUE self, VALUE value)
     unsigned int num;
 
     Data_Get_Struct(self, struct _root_node, root);
-    if ((num = NUM2UINT(value)) != Qnil) {
-        delete_num(root, num);
-    }
+    delete_num(root, NUM2UINT(value));
 
     return self;
 }

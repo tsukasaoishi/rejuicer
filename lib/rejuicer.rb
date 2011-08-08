@@ -21,6 +21,7 @@ class Rejuicer
   #   that index target
   #
   def initialize(*args)
+    @base = RejuicerSet.new
     @tree = args.inject({}){|t,i| t[i.to_sym] = {};t}
   end
 
@@ -39,10 +40,11 @@ class Rejuicer
   #   id_attr : index id
   #
   def add(obj, id_attr = :id)
+    obj_id = obj.__send__(id_attr)
+    @base << obj_id
     @tree.keys.each do |k|
       begin
         at = obj.__send__(k)
-        obj_id = obj.__send__(id_attr)
       rescue NoMethodError
         next
       end
@@ -59,10 +61,11 @@ class Rejuicer
   #   id_attr : index id
   #
   def delete(obj, id_attr = :id)
+    obj_id = obj.__send__(id_attr)
+    @base.delete(obj_id)
     @tree.keys.each do |k|
       begin
         at = obj.__send__(k)
-        obj_id = obj.__send__(id_attr)
       rescue NoMethodError
         next
       end
@@ -76,8 +79,8 @@ class Rejuicer
   # search
   #  conditions: search target
   #
-  def search(conditions)
-    raise ArgumentError if conditions.empty?
+  def search(conditions = nil)
+    return @base.to_a if conditions.nil? || conditions.empty?
 
     f_cond = conditions.shift
     f_set = @tree[f_cond.first.to_sym][f_cond.last]
