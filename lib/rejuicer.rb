@@ -13,6 +13,8 @@ require 'rejuicer_set'
 # index.search(:remainder_3 => 2, :remainder_5 => 4) #=> [14,29,44,59,...,9974,9989]
 #
 class Rejuicer
+  VERSION = "0.0.2"
+
   #
   # args :
   #   methods or attributes name
@@ -50,6 +52,25 @@ class Rejuicer
     end
   end
   alias :<< :add
+
+  #
+  # delete from index
+  #   obj : object
+  #   id_attr : index id
+  #
+  def delete(obj, id_attr = :id)
+    @tree.keys.each do |k|
+      begin
+        at = obj.__send__(k)
+        obj_id = obj.__send__(id_attr)
+      rescue NoMethodError
+        next
+      end
+
+      next unless @tree[k.to_sym][at]
+      @tree[k.to_sym][at].delete(obj_id)
+    end
+  end
 
   # 
   # search

@@ -129,6 +129,54 @@ int search_and_insert_at_leaf(leaf_node leaf, unsigned int value)
 }
 
 //
+// remove element from set
+//
+void delete_num(root_node root, unsigned int value)
+{
+    unsigned int quotient, remainder;
+
+    quotient = value / INDEX_PER_SIZE[0];
+    remainder = value % INDEX_PER_SIZE[0];
+
+    if (!(root->index[quotient])) return;
+
+    if (search_and_remove((branch_node)root->index[quotient], 1, remainder, value)) {
+        root->size--;
+    }
+}
+
+int search_and_remove(branch_node branch, int level, unsigned int value, unsigned int original)
+{
+    unsigned int quotient, remainder, result;
+
+    quotient = value / INDEX_PER_SIZE[level];
+    remainder = value % INDEX_PER_SIZE[level];
+
+    if (!(branch->index[quotient])) return;
+
+    if (level == LAST_BRANCH_LEVEL) {
+        return search_and_remove_at_leaf((leaf_node)branch->index[quotient], remainder);
+    } else {
+        return search_and_remove((branch_node)branch->index[quotient], level + 1, remainder, original);
+    }
+}
+
+int search_and_remove_at_leaf(leaf_node leaf, unsigned int value)
+{
+    int exist_flag = 0;
+    unsigned int target_bit;
+
+    target_bit = 1 << value; 
+
+    if ((leaf->data & target_bit)) {
+        leaf->data ^= target_bit;
+        exist_flag = 1;
+    }
+
+    return exist_flag;
+}
+
+//
 // output Array object from internal set
 //
 void to_array(root_node root, VALUE array)
@@ -269,6 +317,7 @@ void destroy_branch(branch_node branch)
         for(i = 0, count = 0; i < BRANCH_NODE_SIZE || count < branch->children_size; i++) {
             if (branch->index[i]) {
                 free((leaf_node)branch->index[i]);
+                branch->index[i] = NULL;
                 count++;
             }
         }
@@ -276,6 +325,7 @@ void destroy_branch(branch_node branch)
         for(i = 0, count = 0; i < BRANCH_NODE_SIZE || count < branch->children_size; i++) {
             if (branch->index[i]) {
                 destroy_branch((branch_node)branch->index[i]);
+                branch->index[i] = NULL;
                 count++;
             }
         }
@@ -319,6 +369,22 @@ static VALUE t_add(VALUE self, VALUE value)
     Data_Get_Struct(self, struct _root_node, root);
     if ((num = NUM2UINT(value)) != Qnil) {
         add_num(root, num);
+    }
+
+    return self;
+}
+
+/**
+ * delete
+ **/
+static VALUE t_delete(VALUE self, VALUE value)
+{
+    root_node root;
+    unsigned int num;
+
+    Data_Get_Struct(self, struct _root_node, root);
+    if ((num = NUM2UINT(value)) != Qnil) {
+        delete_num(root, num);
     }
 
     return self;
@@ -395,6 +461,7 @@ void Init_rejuicer_set(void) {
     rb_cRejuicerSet = rb_define_class("RejuicerSet", rb_cObject);
     rb_define_singleton_method(rb_cRejuicerSet, "new", t_new, -1);
     rb_define_method(rb_cRejuicerSet, "add", t_add, 1);
+    rb_define_method(rb_cRejuicerSet, "delete", t_delete, 1);
     rb_define_method(rb_cRejuicerSet, "intersection", t_intersection, 1);
     rb_define_method(rb_cRejuicerSet, "to_a", t_to_a, 0);
     rb_define_method(rb_cRejuicerSet, "size", t_size, 0);

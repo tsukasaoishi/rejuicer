@@ -50,6 +50,11 @@ void add_num(root_node, unsigned int);
 int search_and_insert(branch_node, int, unsigned int, unsigned int);
 int search_and_insert_at_leaf(leaf_node, unsigned int);
 
+// remove element from set
+void delete_num(root_node, unsigned int);
+int search_and_remove(branch_node, int, unsigned int, unsigned int);
+int search_and_remove_at_leaf(leaf_node, unsigned int);
+
 // output Array object from internal set
 void to_array(root_node, VALUE);
 void search_and_get_array(branch_node, VALUE);
@@ -71,6 +76,7 @@ void destroy_branch(branch_node);
 
 static VALUE t_new(int, VALUE *, VALUE);
 static VALUE t_add(VALUE, VALUE);
+static VALUE t_delete(VALUE, VALUE);
 static VALUE t_intersection(VALUE, VALUE);
 static VALUE t_to_a(VALUE);
 static VALUE t_size(VALUE);
