@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rejuicer}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Tsukasa OISHI"]
@@ -11,7 +11,21 @@ Gem::Specification.new do |s|
   s.email = ["tsukasa.oishi@gmail.com"]
   s.extensions = ["ext/extconf.rb"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
-  s.files = ["History.txt", "Manifest.txt", "README.rdoc", "Rakefile", "lib/rejuicer.rb", "ext/extconf.rb", "ext/rejuicer_set.h", "ext/rejuicer_set.c"]
+  s.files = %w|
+    History.txt
+    Manifest.txt
+    README.rdoc
+    Rakefile
+    lib/rejuicer.rb
+    ext/extconf.rb
+    ext/rejuicer_set/rejuicer_set.h
+    ext/rejuicer_set/main.c
+    ext/rejuicer_set/init.c
+    ext/rejuicer_set/index.c
+    ext/rejuicer_set/and.c
+    ext/rejuicer_set/or.c
+    ext/rejuicer_set/util.c
+  |
   s.has_rdoc = false
   s.homepage = %q{http://www.kaeruspoon.net/}
   s.rdoc_options = ["--main", "README.rdoc"]

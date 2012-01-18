@@ -14,6 +14,13 @@
 
  index.set(mother)
 
+=== Add to Index
+  num = 20000
+  inst = work.new(num, num % 2 == 0, num % 3, num % 5)
+  index.add(inst)
+=== Remove from Index
+  index.delete(inst)
+
 == Search
  index.search(:odd_flag => false) #=> [1,3,5,7,9...,9997,9999]
  index.search(:remainder_3 => 2, :remainder_5 => 4) #=> [14,29,44,59,...,9974,9989]

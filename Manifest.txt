@@ -4,5 +4,10 @@ README.rdoc
 Rakefile
 lib/rejuicer.rb
 ext/extconf.rb
-ext/rejuicer_set.h
-ext/rejuicer_set.c
+ext/rejuicer_set/rejuicer_set.h
+ext/rejuicer_set/main.c
+ext/rejuicer_set/init.c
+ext/rejuicer_set/index.c
+ext/rejuicer_set/and.c
+ext/rejuicer_set/or.c
+ext/rejuicer_set/util.c

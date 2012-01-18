@@ -13,7 +13,7 @@ require 'rejuicer_set'
 # index.search(:remainder_3 => 2, :remainder_5 => 4) #=> [14,29,44,59,...,9974,9989]
 #
 class Rejuicer
-  VERSION = "0.0.2"
+  VERSION = "0.0.4"
 
   #
   # args :
@@ -80,15 +80,44 @@ class Rejuicer
   #  conditions: search target
   #
   def search(conditions = nil)
-    return @base.to_a if conditions.nil? || conditions.empty?
+    self.and(conditions).to_a
+  end
+
+  #
+  # and
+  #
+  def and(conditions = nil)
+    calc_set(conditions) do |conds, f_set|
+      conds.sort_by{|cond| @tree[cond.first.to_sym][cond.last].size}.inject(f_set) do |work, cond|
+        work & @tree[cond.first.to_sym][cond.last]
+      end
+    end
+  end
+
+  #
+  # or
+  #
+  def or(conditions = nil)
+    calc_set(conditions) do |conds, f_set|
+      conds.inject(f_set) do |work, cond|
+        work | @tree[cond.first.to_sym][cond.last]
+      end
+    end
+  end
+
+  def size
+    @base.size
+  end
+
+  private
+
+  def calc_set(conditions)
+    return @base if conditions.nil? || conditions.empty?
 
     f_cond = conditions.shift
     f_set = @tree[f_cond.first.to_sym][f_cond.last]
-    return f_set.to_a if conditions.empty?
+    return f_set if conditions.empty?
 
-    ret = conditions.sort_by{|cond| @tree[cond.first.to_sym][cond.last].size}.inject(f_set) do |work, cond|
-      work & @tree[cond.first.to_sym][cond.last]
-    end
-    ret.to_a
+    yield(conditions, f_set)
   end
 end
